@@ -20,14 +20,15 @@ $pdfcontent = '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facture</title>
+    <link rel="icon" type="image/png" href="../../assets/img/favicon.png" style="width: 20px; height: 20px;">
+    <title>FACTURE::MDD</title>
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
     <div class="invoice-container">
         <div class="row">
             <div class="col-md-6">
-                <img src="../../img/mmd.jpg" width="100">
+                <img src="../../assets/img/mmd.jpg" width="100">
             </div>
             <h1><u>PROFORMAT</u></h1>
         </div>
@@ -81,7 +82,7 @@ foreach ($data_commande as $commande) {
         <td>' . number_format($commande['prix_vente'], 2, '.', ' ') . '</td>
         <td>18%</td>
         <td>' . number_format($commande['prix_reduction'], 2, '.', ' ') . '</td>
-        <td>' . number_format($total_ht, 2, '.', ' ') . '</td>
+        <td>' . number_format(($total_ht - ($total_ht*0.18)), 2, '.', ' ') . '</td>
     </tr>';
 }
 

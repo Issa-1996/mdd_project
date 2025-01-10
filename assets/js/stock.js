@@ -13,6 +13,15 @@
           data: data, // Utiliser les données récupérées
           options: {
             responsive: false,
+            plugins: {
+              legend: {
+                position: "right", // Aligner les légendes à droite
+                labels: {
+                  boxWidth: 20, // Taille de la boîte de couleur
+                  padding: 15, // Espacement entre les légendes
+                },
+              },
+            },
           },
         });
       },

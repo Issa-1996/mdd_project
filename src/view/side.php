@@ -66,11 +66,11 @@ if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
       </a>
       <div class="d-flex align-items-center ms-4 mb-4">
         <div class="position-relative">
-          <img
+          <!-- <img
             class="rounded-circle"
             src="../../assets/img/user.jpg"
             alt=""
-            style="width: 40px; height: 40px" />
+            style="width: 40px; height: 40px" /> -->
           <div
             class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
         </div>
@@ -85,9 +85,9 @@ if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
           <a
             href="#"
             class="nav-link dropdown-toggle"
-            data-bs-toggle="dropdown"><i class="fa fa-tachometer-alt me-2"></i>COMMANDES</a>
+            data-bs-toggle="dropdown"><i class="fa fa-tachometer-alt me-2"></i>VENTES</a>
           <div class="dropdown-menu bg-transparent border-0">
-            <a href="commande.php" class="nav-item nav-link">COMMANDE</a>
+            <a href="commande.php" class="nav-item nav-link">VENTE</a>
             <a href="client.php" class="nav-item nav-link">CLIENT</a>
             <a href="stock.php" class="nav-item nav-link">STOCK</a>
           </div>
@@ -110,8 +110,10 @@ if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
   </div>
   <!-- Sidebar End -->
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="../../assets/js/jquery-3.4.1.min.js"></script> -->
+   <script src="../../assets/js/bootstrap.bundle.min.js"></script>
+   <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script> -->
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>
   <script src="../../assets/lib/waypoints/waypoints.min.js"></script>

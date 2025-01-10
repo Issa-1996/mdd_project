@@ -26,30 +26,23 @@ if (isset($_GET['put_id_commande'])) {
     if ($info_ligne_commande->num_rows == 0) {
         return header('Location:../view/ligne_de_commande0.php?id_commande=' . $put_id_commande);
     } else {
-        $tab = [];
-        $i = 0;
-        while ($row = mysqli_fetch_array($info_ligne_commande)) {
-            $tab[$i] = $row;
-            $i++;
-        }
-        $put_data_commande = http_build_query(['put_data_commande' => $tab]);
-        return header('Location:../view/ligne_de_commande0.php?openModal=put_commande&put_id_commande=' . $put_id_commande . '&put_data_commande=' . $put_data_commande);
+        return header('Location:../view/ligne_de_commande2.php?openModal=put_commande&put_id_commande=' . $put_id_commande);
     }
 }
 
 
-// Condition pour modifier un commande
-if (isset($_POST['put_id_commande'])) {
-    print_r($_POST); die();
-    try {
-        $result = update_commande($_POST['put_nom_commande'], $_POST['prenom_commande'], $_POST['email'], $_POST['telephone'], $_POST['adresse'], $_POST['put_statut_commande'], $_POST['put_id_commande']);
-        if ($result == true) {
-            return header('Location:../view/commande.php?update_success=commande MODIFIER AVEC SUCCESS ');
-        }
-    } catch (Exception $e) {
-        print_r($e->getMessage());
-    }
-}
+// // Condition pour modifier un commande
+// if (isset($_POST['put_id_commande'])) {
+//     print_r($_POST); die();
+//     try {
+//         $result = update_commande($_POST['put_nom_commande'], $_POST['prenom_commande'], $_POST['email'], $_POST['telephone'], $_POST['adresse'], $_POST['put_statut_commande'], $_POST['put_id_commande']);
+//         if ($result == true) {
+//             return header('Location:../view/commande.php?update_success=commande MODIFIER AVEC SUCCESS ');
+//         }
+//     } catch (Exception $e) {
+//         print_r($e->getMessage());
+//     }
+// }
 
 // Ouverture modal delete commande
 if (isset($_GET['delete_id_commande'])) {
@@ -97,7 +90,10 @@ if (isset($_POST['id_ligne_commande'])) {
         $quantite_dispo = $quantite_disponible - $quantite;
         $reduction = $_POST['prix_reduction'][$key];
         $id_stock = $_POST['id_stock'][$key];
-        update_quantite_stock($quantite_dispo, $id_stock);
+        $info_commande = get_one_commande($_POST['one_commande']);
+        if ($info_commande['type_commande'] == 'vente') {
+            update_quantite_stock($quantite_dispo, $id_stock);
+        }
         $result = update_quantite_ligne_commande($reduction, $quantite, $id_ligne_commande);
     }
     if ($result) {

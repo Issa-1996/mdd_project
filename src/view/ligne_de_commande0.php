@@ -137,100 +137,49 @@ if (isset($_GET['error_add'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             <?php } ?>
-            <?php if (empty($_GET['put_data_commande'])) { ?>
-              <div class="bg-secondary text-center rounded p-4">
-                <h4>VEUILLER CHOISIR LES PRODUITS</h4>
-                <form action="../controller/commande.php" method="POST" id="myForm">
-                  <div class="row d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                      <div class="form-floating mb-3">
-                        <input type="text" name="id_commande" value="<?= $_GET['id_commande']; ?>" hidden>
-                        <select id="produit_id" class="form-select" name="produit_id[]" multiple required>
-                          <option disabled>CHOISIR DES PRODUITS</option>
-                          <?php while ($produit_stock = mysqli_fetch_array($liste_produit_stock)) {
-                            if ($produit_stock['quantite_disponible'] > 0) { ?>
-                              <option value="<?= htmlspecialchars($produit_stock['id_stock']) ?>"><?= htmlspecialchars($produit_stock['nom_produit']) ?></option>
-                          <?php }
-                          } ?>
-                        </select>
+            <div class="bg-secondary text-center rounded p-4">
+              <h4>VEUILLER CHOISIR LES PRODUITS</h4>
+              <form action="../controller/commande.php" method="POST" id="myForm">
+                <div class="row d-flex justify-content-center align-items-center">
+                  <div class="col-md-8">
+                    <div class="form-floating mb-3">
+                      <input type="text" name="id_commande" value="<?= $_GET['id_commande']; ?>" hidden>
+                      <select id="produit_id" class="form-select" name="produit_id[]" multiple required>
+                        <option disabled>CHOISIR DES PRODUITS</option>
+                        <?php while ($produit_stock = mysqli_fetch_array($liste_produit_stock)) {
+                          if ($produit_stock['quantite_disponible'] > 0) { ?>
+                            <option value="<?= htmlspecialchars($produit_stock['id_stock']) ?>"><?= htmlspecialchars($produit_stock['nom_produit']) ?></option>
+                        <?php }
+                        } ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div style="text-align: center;">
+                  <button type="button" class="btn btn-outline-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModals" data-bs-whatever="@mdo">SUIVANT</button>
+                </div>
+                <!-- DEBUT MODAL CONFIRMATION DE CONTINUER -->
+                <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-secondary">
+                      <div class="modal-header">
+                        <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <span id="error-message" style="color: red;"></span>
+                      <div class="modal-body">
+                        VOUS ETES DE VOULOIR CONTINUER ?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">FERMER</button>
+                        <button type="submit" class="btn btn-primary">CONFIRMER</button>
                       </div>
                     </div>
                   </div>
-                  <div style="text-align: center;">
-                    <button type="button" class="btn btn-outline-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModals" data-bs-whatever="@mdo">SUIVANT</button>
-                  </div>
-                  <!-- DEBUT MODAL CONFIRMATION DE CONTINUER -->
-                  <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION</span>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <span id="error-message" style="color: red;"></span>
-                        <div class="modal-body bg-secondary">
-                          VOUS ETES DE VOULOIR CONTINUER ?
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">FERMER</button>
-                          <button type="submit" class="btn btn-primary">CONFIRMER</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Fin MODAL CONFIRMATION DE CONTINUER -->
-                </form>
-              </div>
-            <?php } else { ?>
-              <div class="bg-secondary text-center rounded p-4">
-                <h2>MODIFIER LIGNE DE COMMANDE (PARTIE 2)</h2>
-                <form action="../controller/commande.php" method="POST" id="myForm">
-                  <div class="row d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                      <div class="form-floating mb-3">
-                        <input type="text" name="put_id_commande" value="<?= $_GET['put_id_commande']; ?>" hidden>
-                        <select id="produit_id" class="form-select" name="produit_id[]" multiple required>
-                          <option disabled>CHOISIR DES PRODUITS</option>
-                          <?php
-                          $data = $_GET['put_data_commande'];
-                          for ($i = 0; $i < count($data); $i++) { ?>
-                          <option value="<?= $data[$i]['id_ligne_commande'] ?>" selected><?= $data[$i]['nom_produit'] ?></option>
-                          <?php } ?>
-                          <?php while ($produit_stock = mysqli_fetch_array($liste_produit_stock)) {
-                            if ($produit_stock['quantite_disponible'] > 0) { ?>
-                              <option value="<?= $produit_stock['id_stock'] ?>"><?= htmlspecialchars($produit_stock['nom_produit']) ?></option>
-                          <?php }
-                          } ?>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="text-align: center;">
-                    <button type="button" class="btn btn-outline-success m-2" data-bs-toggle="modal" data-bs-target="#exampleModals" data-bs-whatever="@mdo">SUIVANT</button>
-                  </div>
-                  <!-- DEBUT MODAL CONFIRMATION DE CONTINUER -->
-                  <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION</span>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <span id="error-message" style="color: red;"></span>
-                        <div class="modal-body bg-secondary">
-                          VOUS ETES DE VOULOIR CONTINUER ?
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">FERMER</button>
-                          <button type="submit" class="btn btn-primary">CONFIRMER</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Fin MODAL CONFIRMATION DE CONTINUER -->
-                </form>
-              </div>
-            <?php } ?>
+                </div>
+                <!-- Fin MODAL CONFIRMATION DE CONTINUER -->
+              </form>
+            </div>
           </div>
         </div>
         <!-- Footer Start -->
@@ -244,7 +193,7 @@ if (isset($_GET['error_add'])) {
     </div>
 
     <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="../../assets/js/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../assets/lib/chart/chart.min.js"></script>
     <script src="../../assets/lib/easing/easing.min.js"></script>

@@ -20,14 +20,14 @@ $pdfcontent = '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facture</title>
+    <title>BDL:MDD</title>
     <link href="style.css" rel="stylesheet" />
 </head>
 <body>
     <div class="invoice-container">
         <div class="row">
             <div class="col-md-6">
-                <img src="../../img/mmd.jpg" width="100">
+                <img src="../../assets/img/mmd.jpg" width="100">
             </div>
             <h1><u>PROFORMAT</u></h1>
         </div>
@@ -61,11 +61,9 @@ $pdfcontent .= '<table class="table">
     <thead>
         <tr>
             <th>Nom Produit</th>
-            <th>Qté</th>
-            <th>PU</th>
-            <th>TVA</th>
-            <th>Remise</th>
-            <th>Total HT</th>
+            <th>Quantité</th>
+            <th>Quantité livré</th>
+            <th>Observation</th>
         </tr>
     </thead>
     <tbody>';
@@ -78,10 +76,8 @@ foreach ($data_commande as $commande) {
     $pdfcontent .= '<tr>
         <td>' . htmlspecialchars($commande['nom_produit']) . '</td>
         <td>' . htmlspecialchars($commande['quantite']) . '</td>
-        <td>' . number_format($commande['prix_vente'], 2, '.', ' ') . '</td>
-        <td>18%</td>
-        <td>' . number_format($commande['prix_reduction'], 2, '.', ' ') . '</td>
-        <td>' . number_format($total_ht, 2, '.', ' ') . '</td>
+        <td></td>
+        <td></td>
     </tr>';
 }
 
@@ -90,17 +86,17 @@ $pdfcontent .= '</tbody>
 </table>';
 
 // Ajout des totaux (bas de page)
-if (!empty($data_commande)) {
-    $commande = $data_commande[0];
-    $pdfcontent .= '<div class="total">
-        <p class="ht"><strong>Total HT :</strong> ' . number_format($commande['montant_ht'], 2, '.', ' ') . ' CFA</p>
-        <p class="tva"><strong>TVA :</strong> ' . number_format($commande['tva'], 2, '.', ' ') . ' CFA</p>
-        <p class="ttc"><strong>Total TTC :</strong> <b>' . number_format($commande['montant_ttc'], 2, '.', ' ') . ' CFA</b></p>
-    </div>';
-}
+// if (!empty($data_commande)) {
+//     $commande = $data_commande[0];
+//     $pdfcontent .= '<div class="total">
+//         <p class="ht"><strong>Total HT :</strong> ' . number_format($commande['montant_ht'], 2, '.', ' ') . ' CFA</p>
+//         <p class="tva"><strong>TVA :</strong> ' . number_format($commande['tva'], 2, '.', ' ') . ' CFA</p>
+//         <p class="ttc"><strong>Total TTC :</strong> <b>' . number_format($commande['montant_ttc'], 2, '.', ' ') . ' CFA</b></p>
+//     </div>';
+// }
 
 // Ajout des signatures et notes
-$pdfcontent .= '<p style="margin-top:5%; margin-bottom:10%;">Arrêtée la présente facture à la somme de : <strong>' . convertir_nombre_en_lettres($commande['montant_ttc']) . '.</strong></p>
+$pdfcontent .= '<p style="margin-top:5%; margin-bottom:5%;"></strong></p>
     <div class="receptionniste"><u>LE RECEPTIONNISTE</u></div>
     <div class="livreur"><u>LE LIVREUR</u></div>
     </div>

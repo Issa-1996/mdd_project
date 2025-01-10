@@ -141,7 +141,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
               <?php } else if ($_SESSION['delete_success']) { ?>
-                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                   <i class="fa fa-exclamation-circle me-2"></i><?= $_SESSION['delete_success'] ?> <i class="fa fa-exclamation-circle me-2"></i>
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -165,7 +165,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <thead>
                     <tr class="text-white">
                       <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
-                      <th scope="col">ID</th>
+                      <!-- <th scope="col">ID</th> -->
                       <th scope="col">Nom Client</th>
                       <th scope="col">E-mail</th>
                       <th scope="col">Téléphone</th>
@@ -186,7 +186,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                       <tbody>
                         <tr>
                           <!-- <td><input class="form-check-input" type="checkbox"></td> -->
-                          <td><?= $client['id_client'] ?></td>
+                          <!-- <td><?= $client['id_client'] ?></td> -->
                           <td><?= $client['prenom_client'] . " " . $client['nom_client'] ?></td>
                           <td><?= $client['email_client'] ?></td>
                           <td><?= $client['telephone_client'] ?></td>
@@ -203,7 +203,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                       <!-- Debut Confirmation de suppression catégorie -->
                       <div class="modal fade" id="delete_client" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                          <div class="modal-content">
+                          <div class="modal-content bg-secondary">
                             <div class="modal-header">
                               <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION DE SUPPRESSION</span>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -258,7 +258,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- Début ajout nouveau client -->
@@ -360,14 +360,14 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                     <div class="form-floating mb-3">
                       <input type="text" name="put_id_client" value="<?= $_GET['put_id_client'] ?>" hidden="true">
                       <input type="text" class="form-control" name="put_nom_client"
-                        value="<?= $_GET['put_data_client']['nom_client'] ?>">
+                        value="<?= $_GET['put_data_client']['nom_client'] ?>" required>
                       <label for="floatingInput">Nom client</label>
                     </div>
                   </div>
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="prenom_client"
-                        value="<?= $_GET['put_data_client']['prenom_client'] ?>">
+                        value="<?= $_GET['put_data_client']['prenom_client'] ?>" required>
                       <label for="floatingInput">Prenom client</label>
                     </div>
                   </div>
@@ -376,7 +376,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="telephone"
-                        value="<?= $_GET['put_data_client']['telephone_client'] ?>">
+                        value="<?= $_GET['put_data_client']['telephone_client'] ?>" required>
                       <label for="floatingInput">Téléphone client</label>
                     </div>
                   </div>
@@ -392,7 +392,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="adresse"
-                        value="<?= $_GET['put_data_client']['adresse_client'] ?>">
+                        value="<?= $_GET['put_data_client']['adresse_client'] ?>" required>
                       <label for="floatingInput">Adresse client</label>
                     </div>
                   </div>
@@ -426,8 +426,8 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
   <!-- Fin modifier client -->
 
   <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+  <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>
   <script src="../../assets/lib/waypoints/waypoints.min.js"></script>

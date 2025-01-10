@@ -168,7 +168,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <thead>
                     <tr class="text-white">
                       <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
-                      <th scope="col">ID</th>
+                      <!-- <th scope="col">ID</th> -->
                       <th scope="col">Date</th>
                       <th scope="col">Non categorie</th>
                       <th scope="col">Status</th>
@@ -187,7 +187,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                       <tbody>
                         <tr>
                           <!-- <td><input class="form-check-input" type="checkbox"></td> -->
-                          <td><?= $categorie['id_categorie'] ?></td>
+                          <!-- <td><?= $categorie['id_categorie'] ?></td> -->
                           <td><?= $categorie['date_creation'] ?></td>
                           <td><?= $categorie['nom_categorie'] ?></td>
                           <td><?= $categorie['statut'] ?></td>
@@ -202,12 +202,12 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                       <!-- Debut Confirmation de suppression catégorie -->
                       <div class=" modal fade" id="delete_categorie" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                          <div class="modal-content">
+                          <div class="modal-content bg-secondary">
                             <div class="modal-header">
                               <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION DE SUPPRESSION</span>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body bg-secondary">
+                            <div class="modal-body">
                               Êtes-vous sûr de vouloir continuer cette action ?
                             </div>
                             <div style="text-align: center; margin-bottom:2%">
@@ -257,7 +257,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- Début ajout nouveau catégorie -->
@@ -324,7 +324,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                 <div class="form-floating mb-3">
                   <input type="text" name="put_id_categorie2" value="<?= $_GET['put_id_categorie'] ?>" hidden="true">
                   <input type="text" class="form-control" name="put_nom_categorie"
-                    value="<?= $_GET['put_data_categorie']['nom_categorie'] ?>">
+                    value="<?= $_GET['put_data_categorie']['nom_categorie'] ?>" required>
                   <label for="floatingInput">Non Catégorie</label>
                 </div>
                 <div class="form-floating mb-3">
@@ -363,8 +363,8 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
   <!-- Fin modifier catégorie -->
 
   <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+  <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>
   <script src="../../assets/lib/waypoints/waypoints.min.js"></script>

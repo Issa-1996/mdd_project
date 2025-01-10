@@ -169,7 +169,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                   <thead>
                     <tr class="text-white">
                       <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
-                      <th scope="col">ID</th>
+                      <!-- <th scope="col">ID</th> -->
                       <th scope="col">Nom</th>
                       <th scope="col">Gérant</th>
                       <th scope="col">Adresse</th>
@@ -189,15 +189,15 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                       <tbody>
                         <tr>
                           <!-- <td><input class="form-check-input" type="checkbox"></td> -->
-                          <td><?= $fournisseur['id_fournisseur'] ?></td>
+                          <!-- <td><?= $fournisseur['id_fournisseur'] ?></td> -->
                           <td><?= $fournisseur['nom_fournisseur'] ?></td>
                           <td><?= $fournisseur['contact_personne'] ?></td>
                           <td><?= $fournisseur['adresse'] ?></td>
                           <td><?= $fournisseur['telephone'] ?></td>
-                          <td>
-                            <a class="btn btn-sm btn-warning" href="../controller/fournisseur.php?put_id_fournisseur=<?= $fournisseur['id_fournisseur'] ?>">Modifier</a>
+                          <td style="display:flex; justify-content:center; align-items:center; gap: 10px;">
+                            <a class="btn btn-sm btn-warning p-1" href="../controller/fournisseur.php?put_id_fournisseur=<?= $fournisseur['id_fournisseur'] ?>">Modifier</a>
                             <?php if ($_SESSION['role'] == 'admin') { ?>
-                              <a class="btn btn-sm btn-primary" href="../controller/fournisseur.php?delete_id_fournisseur=<?= $fournisseur['id_fournisseur'] ?>">Supprimer</a>
+                              <a class="btn btn-sm btn-primary p-1" href="../controller/fournisseur.php?delete_id_fournisseur=<?= $fournisseur['id_fournisseur'] ?>">Supprimer</a>
                             <?php } ?>
                           </td>
                         </tr>
@@ -205,12 +205,12 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                       <!-- Debut Confirmation de suppression catégorie -->
                       <div class="modal fade" id="delete_fournisseur" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                          <div class="modal-content">
+                          <div class="modal-content bg-secondary">
                             <div class="modal-header">
                               <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION DE SUPPRESSION</span>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body bg-secondary">
+                            <div class="modal-body">
                               Êtes-vous sûr de vouloir continuer cette action ?
                             </div>
                             <div style="text-align: center; margin-bottom:2%">
@@ -260,7 +260,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- Début ajout nouveau Fournisseur -->
@@ -367,14 +367,14 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                     <div class="form-floating mb-3">
                       <input type="text" name="put_id_fournisseur" value="<?= $_GET['put_id_fournisseur'] ?>" hidden="true">
                       <input type="text" class="form-control" name="put_nom_fournisseur"
-                        value="<?= $_GET['put_data_fournisseur']['nom_fournisseur'] ?>">
+                        value="<?= $_GET['put_data_fournisseur']['nom_fournisseur'] ?>" required>
                       <label for="floatingInput">Non Fournisseur</label>
                     </div>
                   </div>
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="put_contact_personne"
-                        value="<?= $_GET['put_data_fournisseur']['contact_personne'] ?>">
+                        value="<?= $_GET['put_data_fournisseur']['contact_personne'] ?>" required>
                       <label for="floatingInput">Le Gerant</label>
                     </div>
                   </div>
@@ -383,7 +383,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="put_telephone"
-                        value="<?= $_GET['put_data_fournisseur']['telephone'] ?>">
+                        value="<?= $_GET['put_data_fournisseur']['telephone'] ?>" required>
                       <label for="floatingInput">Téléphone Fournisseur</label>
                     </div>
                   </div>
@@ -406,7 +406,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="put_adresse"
-                        value="<?= $_GET['put_data_fournisseur']['adresse'] ?>">
+                        value="<?= $_GET['put_data_fournisseur']['adresse'] ?>" required>
                       <label for="floatingInput">Adresse Fournisseur</label>
                     </div>
                   </div>
@@ -438,7 +438,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_f
   <!-- Fin modifier Fournisseur -->
 
   <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="../../assets/js/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>

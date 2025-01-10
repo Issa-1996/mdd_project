@@ -170,7 +170,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                   <thead>
                     <tr class="text-white">
                       <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
-                      <th scope="col">ID </th>
+                      <th scope="col">N° Fact </th>
                       <th scope="col">Prenom & Nom</th>
                       <th scope="col">Téléphone</th>
                       <th scope="col">Type de Commande</th>
@@ -191,7 +191,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                       <tbody>
                         <tr>
                           <!-- <td><input class="form-check-input" type="checkbox"></td> -->
-                          <td><?= $commande['id_commande'] ?></td>
+                          <td><?= $commande['numero_commande'] ?></td>
                           <td><?= $commande['prenom_client'] . " " . $commande['nom_client'] ?></td>
                           <td><?= $commande['telephone_client'] ?></td>
                           <td><?= $commande['type_commande'] ?></td>
@@ -204,7 +204,9 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
                                 <a class="btn btn-sm btn-primary" href="../controller/commande.php?delete_id_commande=<?= $commande['id_commande'] ?>">Supprimer</a>
                             <?php }
                             } ?>
+                            <?php if ($commande['statut_commande'] == 'validee') { ?>
                             <a class="btn btn-sm btn-dark" href="ligne_de_commande4.php?id_commande=<?= $commande['id_commande'] ?>">Imprimer</a>
+                            <?php } ?>
                           </td>
                         </tr>
                       </tbody>
@@ -266,7 +268,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_c
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- Début modifier commande -->

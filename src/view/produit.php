@@ -210,11 +210,9 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
                     </p>
                     <?php if ($_SESSION['role'] == 'admin') { ?>
                       <div class="row">
-                        <div class="col">
-                          <a class="btn btn-outline-warning" href="../controller/produit.php?put_id_produit=<?= $produit['id_produit'] ?>">Ajuster</a>
-                        </div>
-                        <div class="col">
-                          <a class="btn btn-outline-primary" href="../controller/produit.php?delete_id_produit=<?= $produit['id_produit'] ?>">Retirer</a>
+                        <div class="col" style="display:flex; justify-content:center; align-items:center; gap: 10px;">
+                          <a class="btn btn-outline-warning p-1" href="../controller/produit.php?put_id_produit=<?= $produit['id_produit'] ?>">Ajuster</a>
+                          <a class="btn btn-outline-primary p-1" href="../controller/produit.php?delete_id_produit=<?= $produit['id_produit'] ?>">Retirer</a>
                         </div>
                       </div>
                     <?php } else if ($_SESSION['role'] == 'employe') { ?>
@@ -233,12 +231,12 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
               <!-- Debut Confirmation de suppression catégorie -->
               <div class="modal fade" id="delete_produit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                  <div class="modal-content">
+                  <div class="modal-content bg-secondary">
                     <div class="modal-header">
                       <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION DE SUPPRESSION</span>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body bg-secondary">
+                    <div class="modal-body">
                       Êtes-vous sûr de vouloir continuer cette action ?
                     </div>
                     <div style="text-align: center; margin-bottom:2%">
@@ -356,9 +354,8 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
                       </div>
                       <div class="col">
                         <div class="form-floating mb-3">
-                          <select class="form-select" name="fournisseur_id"
-                            aria-label="Floating label select example">
-                            <option disabled selected>CHOISIR UN FOURNISSEUR</option>
+                          <select class="form-select" name="fournisseur_id" aria-label="Floating label select example" required>
+                            <option value="" disabled selected>CHOISIR UN FOURNISSEUR</option>
                             <?php while ($fournisseur = mysqli_fetch_array($fournisseurs)) { ?>
                               <option value="<?= $fournisseur['id_fournisseur'] ?>"><?= $fournisseur['nom_fournisseur'] ?></option>
                             <?php } ?>
@@ -408,7 +405,7 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
                         <div class="form-floating mb-3">
                           <input type="text" name="put_id_categorie2" value="<?= $_GET['put_id_produit'] ?>" hidden="true" required>
                           <input type="text" class="form-control" name="put_nom_produit" value="<?= $_GET['put_data_produit']['nom_produit'] ?>"
-                            placeholder="Nom Produit">
+                            placeholder="Nom Produit" required>
                           <label for="floatingInput">Non Produit</label>
                         </div>
                       </div>
@@ -437,7 +434,7 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
                     <div class="row">
                       <div class="col">
                         <div class="form-floating mb-3">
-                          <input type="number" class="form-control" name="put_prix_vente" value="<?= $_GET['put_data_produit']['prix_vente'] ?>" required>
+                          <input type="number" class="form-control" name="put_prix_vente" value="<?= $_GET['put_data_produit']['prix_vente'] ?>" min="1" required>
                           <label for="floatingInput">Prix de vente</label>
                         </div>
                       </div>
@@ -612,11 +609,11 @@ $openModal_produit_get = isset($_GET['openModal']) && $_GET['openModal'] == 'get
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="../../assets/js/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>

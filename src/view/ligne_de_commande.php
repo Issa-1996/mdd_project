@@ -77,12 +77,12 @@ if (isset($_GET['error_add'])) {
                                 <!-- DEBUT MODAL CONFIRMATION DE CONTINUER -->
                                 <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content bg-secondary">
                                             <div class="modal-header">
                                                 <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION</span>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body bg-secondary">
+                                            <div class="modal-body">
                                                 VOUS ETES DE VOULOIR CONTINUER ?
                                             </div>
                                             <div class="modal-footer">
@@ -104,8 +104,8 @@ if (isset($_GET['error_add'])) {
         </div>
 
         <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+        <script src="../../assets/js/bootstrap.bundle.min.js"></script>
         <script src="../../assets/lib/chart/chart.min.js"></script>
         <script src="../../assets/lib/easing/easing.min.js"></script>
         <script src="../../assets/lib/waypoints/waypoints.min.js"></script>

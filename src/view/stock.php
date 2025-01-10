@@ -128,6 +128,82 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
       background-color: black !important;
     }
   </style>
+  <style>
+    /* Style général pour tous les boutons */
+    .btn-signal {
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
+      animation: clignote 1s infinite;
+      transition: transform 0.2s ease;
+    }
+
+    /* Effet clic */
+    .btn-signal:active {
+      transform: scale(0.95);
+    }
+
+    /* Bouton Vert */
+    .btn-vert {
+      background-color: #28a745;
+      animation: clignote-vert 10s infinite;
+    }
+
+    /* Bouton Jaune */
+    .btn-jaune {
+      /* background-color: #ffc107; */
+      animation: clignote-jaune 5s infinite;
+    }
+
+    /* Bouton Rouge */
+    .btn-rouge {
+      /* background-color: #dc3545; */
+      animation: clignote-rouge 1s infinite;
+    }
+
+    /* Animation pour le bouton vert */
+    @keyframes clignote-vert {
+
+      0%,
+      100% {
+        /* background-color: #28a745; */
+      }
+
+      50% {
+        background-color: #218838;
+      }
+    }
+
+    /* Animation pour le bouton jaune */
+    @keyframes clignote-jaune {
+
+      0%,
+      100% {
+        /* background-color: #ffc107; */
+      }
+
+      50% {
+        background-color: #e0a800;
+      }
+    }
+
+    /* Animation pour le bouton rouge */
+    @keyframes clignote-rouge {
+
+      0%,
+      100% {
+        /* background-color: #dc3545; */
+      }
+
+      50% {
+        background-color: #c82333;
+      }
+    }
+  </style>
   <!-- CSS de Choices.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
@@ -185,7 +261,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                     <?= $_SESSION['update_success']; ?>
                   </div>
                 </div> -->
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                   <i class="fa fa-exclamation-circle me-2"></i><?= $_SESSION['update_success']; ?><i class="fa fa-exclamation-circle me-2"></i>
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -222,7 +298,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                   <thead>
                     <tr class="text-white">
-                      <th scope="col">ID</th>
+                      <!-- <th scope="col">ID</th> -->
                       <th scope="col" style="width: 30%;">Nom Produit</th>
                       <th scope="col">Prix de vente</th>
                       <th scope="col">Categorie</th>
@@ -242,11 +318,19 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                     while ($stock = mysqli_fetch_array($stocks)) { ?>
                       <tbody>
                         <tr>
-                          <td><?= $stock['id_stock'] ?></td>
+                          <!-- <td><button class="btn-signal-vert" onclick="alert('Signal vert activé !')">
+                              Signal Vert
+                            </button></td> -->
                           <td><?= $stock['nom_produit'] ?></td>
                           <td><?= $stock['prix_vente'] ?></td>
                           <td><?= $stock['nom_categorie'] ?></td>
-                          <td><?= $stock['quantite_disponible'] ?></td>
+                          <?php if ($stock['quantite_disponible'] >= $stock['max']) { ?>
+                            <td title="ETAT STOCK SUFFISANT" class="btn-signal btn-vert"><?= $stock['quantite_disponible'] ?></td>
+                          <?php } else if (($stock['quantite_disponible'] > $stock['min']) && ($stock['quantite_disponible'] < $stock['max'])) { ?>
+                            <td title="ETAT STOCK MOYEN" class="btn-signal btn-jaune"><?= $stock['quantite_disponible'] ?></td>
+                          <?php } else if ($stock['quantite_disponible'] <= $stock['min']) { ?>
+                            <td title="ETAT STOCK INSUFFISANT" class="btn-signal btn-rouge"><?= $stock['quantite_disponible'] ?></td>
+                          <?php } ?>
                           <td>
                             <img class="img-fluid transition scale-on-hover" style="height: 3rem; overflow: hidden;" src="<?= $stock['image_produit'] ?>" alt="<?= $stock['nom_produit'] ?>" width="80">
                           </td>
@@ -261,7 +345,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                       <!-- Debut Confirmation de suppression catégorie -->
                       <div class="modal fade" id="delete_stock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                          <div class="modal-content">
+                          <div class="modal-content bg-secondary">
                             <div class="modal-header">
                               <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION DE SUPPRESSION</span>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -316,7 +400,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
     <!-- Content End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a> -->
   </div>
 
   <!-- Début ajout nouveau stock -->
@@ -338,7 +422,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                   <div class="col">
                     <div class="form-floating mb-3">
                       <select id="produit_id" class="form-select" name="produit_id[]" multiple required="true">
-                        <option disabled>CHOISIR DES PRODUITS</option>
+                        <option value="" disabled>CHOISIR DES PRODUITS</option>
                         <?php while ($stock = mysqli_fetch_array($add_stocks)) { ?>
                           <option value="<?= htmlspecialchars($stock['id_produit']) ?>"><?= htmlspecialchars($stock['nom_produit']) ?></option>
                         <?php } ?>
@@ -351,7 +435,21 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                     <div class="form-floating mb-3">
                       <input type="number" class="form-control" name="quantite_disponible"
                         placeholder="Quantite disponible" required="true">
-                      <label for="floatingInput">Quantite Disponible</label>
+                      <label for="">Quantité Disponible</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" name="min">
+                      <label for="">Quantité minimum</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" name="max">
+                      <label for="">Quantité maximum</label>
                     </div>
                   </div>
                 </div>
@@ -366,7 +464,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                         <option value="mmd_parcelle">DEPOT PARCELLE</option>
                         <option value="mmd_foire">DEPOT FOIRE</option>
                       </select>
-                      <label for="floatingInput">Emplacement du produit</label>
+                      <label for="">Emplacement du produit</label>
                     </div>
                   </div>
                 </div>
@@ -402,7 +500,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                   <div class="col">
                     <div class="form-floating mb-3">
                       <input type="text" name="put_id_stock" value="<?= $_GET['put_id_stock'] ?>" hidden="true">
-                      <select id="put_produit_id" class="form-select" name="put_produit_id" multiple required="true">
+                      <select id="put_produit_id" class="form-select" name="put_produit_id" multiple required>
                         <option value="<?= $_GET['put_data_stock']['produit_id'] ?>" selected><?= $_GET['put_data_stock']['nom_produit'] ?></option>
                         <?php while ($stock = mysqli_fetch_array($put_stocks)) { ?>
                           <option value="<?= htmlspecialchars($stock['id_produit']) ?>"><?= htmlspecialchars($stock['nom_produit']) ?></option>
@@ -416,7 +514,21 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                     <div class="form-floating mb-3">
                       <input type="number" class="form-control" name="put_quantite_disponible"
                         placeholder="Quantite disponible" required="true" value="<?= $_GET['put_data_stock']['quantite_disponible'] ?>">
-                      <label for="floatingInput">Quantite Disponible</label>
+                      <label for="">Quantite Disponible</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" name="min" value="<?= $_GET['put_data_stock']['min'] ?>" required>
+                      <label for="">Quantité minimum</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" name="max" value="<?= $_GET['put_data_stock']['max'] ?>" required>
+                      <label for="">Quantité maximum</label>
                     </div>
                   </div>
                 </div>
@@ -429,7 +541,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
                         <option value="mmd_edk">BOUTIQUE EDK</option>
                         <option value="mmd_depot">DEPOT STOCK</option>
                       </select>
-                      <label for="floatingInput">Emplacement du produit</label>
+                      <label for="">Emplacement du produit</label>
                     </div>
                   </div>
                 </div>
@@ -479,6 +591,7 @@ $openModal_delete = isset($_GET['openModal']) && $_GET['openModal'] == 'delete_s
       const choices = new Choices(selectElement, {
         removeItemButton: true, // Permet de supprimer les options sélectionnées
         placeholder: true,
+        required: true,
         placeholderValue: 'CHOISIR UN PRODUIT', // Texte de placeholder
         searchPlaceholderValue: 'Rechercher...', // Texte pour la recherche
         maxItemCount: 100, // Lim ite des sélections, si nécessaire

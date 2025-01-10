@@ -54,18 +54,6 @@ if (isset($_GET['error'])) {
 
 <body>
   <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <!-- <div
-      id="spinner"
-      class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-      <div
-        class="spinner-border text-primary"
-        style="width: 3rem; height: 3rem"
-        role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div> -->
-    <!-- Spinner End -->
 
     <!-- Sign In Start -->
     <div class="container-fluid">
@@ -78,11 +66,12 @@ if (isset($_GET['error'])) {
               class="d-flex align-items-center justify-content-between mb-3">
               <a href="#" class="">
                 <h3 class="text-primary">
-                  <i class="fa fa-user-edit me-2"></i>MDD
+                  <img src="assets/img/mmd-removebg-preview.png" width="70" alt="">
                 </h3>
-              </a>
+              </a><br>
               <h3>CONNEXION</h3>
-            </div> <?php
+            </div> 
+            <?php
                     if ($_SESSION['error']) { ?>
               <div class="alert alert-primary" role="alert" style="font-size: 12px;">
                 <i class="fa fa-exclamation-circle me-2"></i><?= $_SESSION['error'] ?><i class="fa fa-exclamation-circle me-2"></i>

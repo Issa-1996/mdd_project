@@ -9,7 +9,7 @@ if (!$connexion) {
 }
 
 // Requête pour récupérer les données
-$sql = "SELECT DATE(date_creation) AS jour, COUNT(*) AS nombre_clients_ajoutes FROM client GROUP BY DATE(date_creation) ORDER BY DATE(date_creation) DESC";
+$sql = "SELECT DATE(date_creation) AS jour, COUNT(*) AS nombre_clients_ajoutes FROM client GROUP BY DATE(date_creation) ORDER BY DATE(date_creation) ASC";
 $result = mysqli_query($connexion, $sql);
 
 $data = [

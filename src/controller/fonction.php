@@ -312,11 +312,12 @@ function add_produit($nom_produit, $description, $prix_unitaire, $categorie_id, 
 {
     global $connexion;
 
-    try {
+    if ($image_file['name']) {
         // Dossier cible pour les images
         $target_dir = '../../assets/img/';
         if (!is_dir($target_dir)) {
-            die("Erreur : Le dossier cible n'existe pas ou n'est pas accessible : $target_dir");
+            // die("Erreur : Le dossier cible n'existe pas ou n'est pas accessible : $target_dir");
+            return header("Location:../view/produit.php?error_add=Erreur : Le dossier cible n\'existe pas ou n\'est pas accessible : $target_dir");
         }
 
         // Nom unique pour l'image
@@ -327,12 +328,14 @@ function add_produit($nom_produit, $description, $prix_unitaire, $categorie_id, 
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
         $file_extension = strtolower(pathinfo($image_file['name'], PATHINFO_EXTENSION));
         if (!in_array($file_extension, $allowed_extensions)) {
-            die("Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.");
+            // die("Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.");
+            return header('Location:../view/produit.php?error_add=Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.');
         }
 
         // Vérification de la taille du fichier (limite de 2 Mo)
         if ($image_file['size'] > 2 * 1024 * 1024) { // Limite de 2 Mo
-            die("Erreur : La taille de l'image dépasse la limite de 2 Mo.");
+            // die("Erreur : La taille de l'image dépasse la limite de 2 Mo.");
+            return header('Location:../view/produit.php?error_add=Erreur : La taille de l\'image dépasse la limite de 2 Mo.');
         }
 
         // Déplacer le fichier téléchargé
@@ -340,7 +343,8 @@ function add_produit($nom_produit, $description, $prix_unitaire, $categorie_id, 
             // Si le fichier est correctement uploadé, on continue
             $image_produit = str_replace(__DIR__ . '/../../', '', $target_file); // Chemin relatif à enregistrer
         } else {
-            die("Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
+            // die("Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
+            return header("Location:../view/produit.php?error_add=Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
         }
 
         // Préparation des données
@@ -381,8 +385,45 @@ function add_produit($nom_produit, $description, $prix_unitaire, $categorie_id, 
         } else {
             return "Erreur lors de l'ajout du produit : " . $stmt->error;
         }
-    } catch (Exception $e) {
-        die("Erreur lors de l'ajout du produit : " . $e->getMessage());
+    } else {
+        // Préparation des données
+        $id_utilisateur = $_SESSION['id_utilisateur'];
+        $date_creation = date('Y-m-d H:i:s');
+
+        // Requête SQL pour insérer les données
+        $requete = "INSERT INTO `produit` 
+                    (`nom_produit`, `description`, `prix_unitaire`, `categorie_id`, `prix_achat`, `prix_vente`, `fournisseur_id`, `date_creation`, `statut`, `image_produit`, `id_utilisateur`) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $connexion->prepare($requete);
+
+        // Vérifier si la requête a été correctement préparée
+        if (!$stmt) {
+            die("Erreur dans la préparation de la requête : " . $connexion->error);
+        }
+        $image_produit='';
+        // Liaison des paramètres avec `bind_param()`
+        $stmt->bind_param(
+            'ssdiidssssi',
+            $nom_produit,
+            $description,
+            $prix_unitaire,
+            $categorie_id,
+            $prix_achat,
+            $prix_vente,
+            $fournisseur_id,
+            $date_creation,
+            $statut,
+            $image_produit,
+            $id_utilisateur
+        );
+
+        // Exécution de la requête
+        if ($stmt->execute()) {
+            return $stmt;
+        } else {
+            return "Erreur lors de l'ajout du produit : " . $stmt->error;
+        }
     }
 }
 
@@ -397,7 +438,7 @@ function get_all_produit()
 {
     global $connexion, $items_per_page2, $offset2;
     // $items_per_page = 20;
-    $requete = "SELECT * FROM produit JOIN categorie ON categorie.id_categorie = produit.categorie_id JOIN fournisseur ON fournisseur.id_fournisseur = produit.fournisseur_id LIMIT $items_per_page2 OFFSET $offset2";
+    $requete = "SELECT * FROM produit JOIN categorie ON categorie.id_categorie = produit.categorie_id JOIN fournisseur ON fournisseur.id_fournisseur = produit.fournisseur_id ORDER BY produit.date_creation DESC LIMIT $items_per_page2 OFFSET $offset2";
     // $requete = "SELECT * FROM produit LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
@@ -409,7 +450,7 @@ Récuperer la liste de tous les produits sans pagination
 function get_all_produit_no_pagination()
 {
     global $connexion;
-    $requete = "SELECT * FROM produit";
+    $requete = "SELECT * FROM produit ORDER BY produit.date_creation DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -431,10 +472,11 @@ Modifier les informations d'une produit selon son id
 function update_produit($nom_produit, $description, $prix_unitaire, $categorie_id, $prix_achat, $prix_vente, $fournisseur_id, $statut, $image_file, $id_produit)
 {
     global $connexion;
-    if ($image_file) {
+    if ($image_file['name']) {
         $target_dir = '../../assets/img/';
         if (!is_dir($target_dir)) {
-            die("Erreur : Le dossier cible n'existe pas ou n'est pas accessible : $target_dir");
+            // die("Erreur : Le dossier cible n'existe pas ou n'est pas accessible : $target_dir");
+            return header("Location:../view/produit.php?error_add=Erreur : Le dossier cible n\'existe pas ou n\'est pas accessible : $target_dir");
         }
 
         // Nom unique pour l'image
@@ -445,12 +487,14 @@ function update_produit($nom_produit, $description, $prix_unitaire, $categorie_i
         $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
         $file_extension = strtolower(pathinfo($image_file['name'], PATHINFO_EXTENSION));
         if (!in_array($file_extension, $allowed_extensions)) {
-            die("Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.");
+            // die("Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.");
+            return header('Location:../view/produit.php?error_add=Erreur : Seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.');
         }
 
         // Vérification de la taille du fichier (limite de 2 Mo)
         if ($image_file['size'] > 2 * 1024 * 1024) { // Limite de 2 Mo
-            die("Erreur : La taille de l'image dépasse la limite de 2 Mo.");
+            // die("Erreur : La taille de l'image dépasse la limite de 2 Mo.");
+            return header('Location:../view/produit.php?error_add=Erreur : La taille de l\'image dépasse la limite de 2 Mo.');
         }
 
         // Déplacer le fichier téléchargé
@@ -458,7 +502,8 @@ function update_produit($nom_produit, $description, $prix_unitaire, $categorie_i
             // Si le fichier est correctement uploadé, on continue
             $image_file = str_replace(__DIR__ . '/../../', '', $target_file); // Chemin relatif à enregistrer
         } else {
-            die("Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
+            // die("Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
+            return header("Location:../view/produit.php?error_add=Erreur lors du téléchargement de l'image. Vérifiez les permissions du dossier cible : $target_dir");
         }
         $requete = "UPDATE produit SET nom_produit = ?, description = ?, prix_unitaire = ?, categorie_id = ?, prix_achat = ?, prix_vente = ?, fournisseur_id = ?, statut = ?, image_produit = ? WHERE id_produit = ?";
         $stmt = $connexion->prepare($requete);
@@ -507,7 +552,7 @@ fonction pour rechercher sur la table produit
 function get_search_produit($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM produit JOIN categorie ON categorie.id_categorie = produit.categorie_id WHERE nom_produit LIKE '%$search%' OR produit.statut LIKE '%$search%' OR nom_categorie LIKE '%$search%' OR prix_vente LIKE '%$search%'";
+    $requete = "SELECT * FROM produit JOIN categorie ON categorie.id_categorie = produit.categorie_id WHERE nom_produit LIKE '%$search%' OR produit.statut LIKE '%$search%' OR nom_categorie LIKE '%$search%' OR prix_vente LIKE '%$search%' ORDER BY produit.date_creation DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -525,7 +570,7 @@ La liste de tous les categories
 function get_all_category()
 {
     global $connexion, $items_per_page, $offset;
-    $requete = "SELECT * FROM categorie LIMIT $items_per_page OFFSET $offset";
+    $requete = "SELECT * FROM categorie ORDER BY date_creation DESC LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -536,7 +581,7 @@ La liste de tous les categories sans la pagination
 function get_all_category_no_pagination()
 {
     global $connexion;
-    $requete = "SELECT * FROM categorie";
+    $requete = "SELECT * FROM categorie ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -609,7 +654,7 @@ fonction pour rechercher sur la table categorie
 function get_search_categorie($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM categorie WHERE nom_categorie LIKE '%$search%' OR statut LIKE '%$search%' OR date_creation LIKE '%$search%'";
+    $requete = "SELECT * FROM categorie WHERE nom_categorie LIKE '%$search%' OR statut LIKE '%$search%' OR date_creation LIKE '%$search%' ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -626,7 +671,7 @@ La liste de tous les fournisseur
 function get_all_fournisseur()
 {
     global $connexion, $items_per_page, $offset;
-    $requete = "SELECT * FROM fournisseur LIMIT $items_per_page OFFSET $offset";
+    $requete = "SELECT * FROM fournisseur ORDER BY date_creation DESC LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -637,7 +682,7 @@ La liste de tous les fournisseur sans la pagination
 function get_all_fournisseur_no_pagination()
 {
     global $connexion;
-    $requete = "SELECT * FROM fournisseur";
+    $requete = "SELECT * FROM fournisseur ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -711,7 +756,7 @@ fonction pour rechercher sur la table fournisseur
 function get_search_fournisseur($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM fournisseur WHERE nom_fournisseur LIKE '%$search%' OR telephone LIKE '%$search%' OR contact_personne LIKE '%$search%' OR adresse LIKE '%$search%'";
+    $requete = "SELECT * FROM fournisseur WHERE nom_fournisseur LIKE '%$search%' OR telephone LIKE '%$search%' OR contact_personne LIKE '%$search%' OR adresse LIKE '%$search%' ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -724,13 +769,13 @@ function get_search_fournisseur($search)
 
 /***********************DEBUT (LES FONCTION DE LA TABLE STOCK) ********************************* */
 /********************************************************************************** 
-La liste de tous les fournisseur 
+La liste de tous le stock 
  **********************************************************************************/
 function get_all_stock()
 {
     global $connexion, $items_per_page, $offset;
     $items_per_page = 8;
-    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id LIMIT $items_per_page OFFSET $offset";
+    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id ORDER BY stock.date_mise_a_jour DESC LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -741,7 +786,7 @@ La liste de tous les stock sans la pagination
 function get_all_stock_no_pagination()
 {
     global $connexion;
-    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id";
+    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id ORDER BY stock.date_mise_a_jour DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -760,14 +805,14 @@ function get_one_stock($id_stock)
 /**********************************************************************************
 Modifier les informations d'une stock selon son id
  **********************************************************************************/
-function update_stock($produit_id, $quantite_disponible, $emplacement_produit, $id_stock)
+function update_stock($produit_id, $quantite_disponible, $min, $max, $emplacement_produit, $id_stock)
 {
 
     global $connexion;
     $date_mise_a_jour = date('Y-m-d H:i:s');
-    $requete = "UPDATE stock SET produit_id = ?, quantite_disponible = ?, emplacement_produit = ?, date_mise_a_jour = ? WHERE id_stock = ?";
+    $requete = "UPDATE stock SET produit_id = ?, quantite_disponible = ?, min=?, max=?, emplacement_produit = ?, date_mise_a_jour = ? WHERE id_stock = ?";
     $stmt = $connexion->prepare($requete);
-    $stmt->bind_param("iissi", $produit_id, $quantite_disponible, $emplacement_produit, $date_mise_a_jour, $id_stock);
+    $stmt->bind_param("iiiissi", $produit_id, $quantite_disponible, $min, $max, $emplacement_produit, $date_mise_a_jour, $id_stock);
     if ($stmt->execute()) {
         return true;
     } else {
@@ -793,13 +838,13 @@ function update_quantite_stock($quantite_disponible, $id_stock)
 /********************************************************************************** 
 Ajouter un nouveau stock
  ********************************************************************************* */
-function add_stock($produit_id, $quantite_disponible, $emplacement_produit)
+function add_stock($produit_id, $quantite_disponible, $min, $max, $emplacement_produit)
 {
     global $connexion;
     $date_ajout = $date_mise_a_jour = date('Y-m-d H:i:s');
     session_start();
     $id_utilisateur = $_SESSION['id_utilisateur'];
-    $requete = "INSERT INTO `stock` (`produit_id`, `quantite_disponible`, `emplacement_produit`, `date_ajout`, `date_mise_a_jour`, `id_utilisateur`) VALUES ('$produit_id', '$quantite_disponible', '$emplacement_produit', '$date_ajout', '$date_mise_a_jour', '$id_utilisateur')";
+    $requete = "INSERT INTO `stock` (`produit_id`, `quantite_disponible`,`min`,`max`, `emplacement_produit`, `date_ajout`, `date_mise_a_jour`, `id_utilisateur`) VALUES ('$produit_id', '$quantite_disponible', '$min', '$max', '$emplacement_produit', '$date_ajout', '$date_mise_a_jour', '$id_utilisateur')";
     $result = $connexion->prepare($requete);
     return $result->execute();
 }
@@ -831,7 +876,7 @@ fonction pour rechercher sur la table stock
 function get_search_stock($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id WHERE nom_produit LIKE '%$search%' OR prix_vente LIKE '%$search%' OR nom_categorie LIKE '%$search%'";
+    $requete = "SELECT * FROM stock JOIN produit ON produit.id_produit = stock.produit_id JOIN categorie ON categorie.id_categorie = produit.categorie_id WHERE nom_produit LIKE '%$search%' OR prix_vente LIKE '%$search%' OR nom_categorie LIKE '%$search%' ORDER BY date_mise_a_jour DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -845,12 +890,12 @@ function get_search_stock($search)
 
 /***********************DEBUT (LES FONCTION DE LA TABLE CLIENT) ********************************* */
 /********************************************************************************** 
-La liste de tous les fournisseur 
+La liste de tous les clients 
  **********************************************************************************/
 function get_all_client()
 {
     global $connexion, $items_per_page, $offset;
-    $requete = "SELECT * FROM client LIMIT $items_per_page OFFSET $offset";
+    $requete = "SELECT * FROM client ORDER BY date_creation DESC LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -861,7 +906,7 @@ La liste de tous les client sans la pagination
 function get_all_client_no_pagination()
 {
     global $connexion;
-    $requete = "SELECT * FROM client";
+    $requete = "SELECT * FROM client ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -935,7 +980,7 @@ fonction pour rechercher sur la table client
 function get_search_client($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM client WHERE nom_client LIKE '%$search%' OR prenom_client LIKE '%$search%' OR email_client LIKE '%$search%' OR telephone_client LIKE '%$search%' OR adresse_client LIKE '%$search%' OR statut LIKE '%$search%'";
+    $requete = "SELECT * FROM client WHERE nom_client LIKE '%$search%' OR prenom_client LIKE '%$search%' OR email_client LIKE '%$search%' OR telephone_client LIKE '%$search%' OR adresse_client LIKE '%$search%' OR statut LIKE '%$search%' ORDER BY date_creation DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -991,6 +1036,34 @@ function update_utilisateur($nom_utilisateur, $prenom_utilisateur, $telephone_ut
     $requete = "UPDATE utilisateur SET nom = ?, prenom = ?, telephone = ?, email = ?, role = ?, statut = ? WHERE id_utilisateur = ?";
     $stmt = $connexion->prepare($requete);
     $stmt->bind_param("ssssssi", $nom_utilisateur, $prenom_utilisateur, $telephone_utilisateur, $email_utilisateur, $role, $statut, $id_utilisateur);
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return "Erreur d'exécution : " . $stmt->error;
+    }
+}
+function update_utilisateur_2($telephone_utilisateur, $email_utilisateur, $login_utilisateur, $id_utilisateur)
+{
+
+    global $connexion;
+    $requete = "UPDATE utilisateur SET telephone = ?, email = ?, login=? WHERE id_utilisateur = ?";
+    $stmt = $connexion->prepare($requete);
+    $stmt->bind_param("sssi", $telephone_utilisateur, $email_utilisateur, $login_utilisateur, $id_utilisateur);
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return "Erreur d'exécution : " . $stmt->error;
+    }
+}
+
+function update_utilisateur_3($telephone_utilisateur, $email_utilisateur, $login_utilisateur, $mot_de_passe, $id_utilisateur)
+{
+
+    global $connexion;
+    $requete = "UPDATE utilisateur SET telephone = ?, email = ?,  login=?, mot_de_passe= ? WHERE id_utilisateur = ?";
+    $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT); // Hachage du mot de passe
+    $stmt = $connexion->prepare($requete);
+    $stmt->bind_param("ssssi", $telephone_utilisateur, $email_utilisateur, $login_utilisateur, $mot_de_passe_hash, $id_utilisateur);
     if ($stmt->execute()) {
         return true;
     } else {
@@ -1089,7 +1162,7 @@ La liste de tous les Commande
 function get_all_commande()
 {
     global $connexion, $items_per_page, $offset;
-    $requete = "SELECT * FROM commande JOIN client ON client.id_client = commande.id_client LIMIT $items_per_page OFFSET $offset";
+    $requete = "SELECT * FROM commande JOIN client ON client.id_client = commande.id_client ORDER BY commande.date_commande DESC LIMIT $items_per_page OFFSET $offset";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
@@ -1097,13 +1170,13 @@ function get_all_commande()
 /********************************************************************************** 
 La liste de tous les commande sans la pagination
  **********************************************************************************/
-function get_all_commande_no_pagination()
-{
-    global $connexion;
-    $requete = "SELECT * FROM commande";
-    $resultat = $connexion->query($requete);
-    return $resultat;
-}
+// function get_all_commande_no_pagination()
+// {
+//     global $connexion;
+//     $requete = "SELECT * FROM commande";
+//     $resultat = $connexion->query($requete);
+//     return $resultat;
+// }
 
 /********************************************************************************** 
 Les information d'une seule commande selon son id 
@@ -1119,13 +1192,13 @@ function get_one_commande($id_commande)
 /********************************************************************************** 
 Toute les les information d'une seule commande selon son id 
  **********************************************************************************/
-function all_info_commande($id_commande)
-{
-    global $connexion;
-    $requete = "SELECT * FROM commande where id_commande ='$id_commande'";
-    $resultat = $connexion->query($requete);
-    return $resultat->fetch_assoc();
-}
+// function all_info_commande($id_commande)
+// {
+//     global $connexion;
+//     $requete = "SELECT * FROM commande where id_commande ='$id_commande'";
+//     $resultat = $connexion->query($requete);
+//     return $resultat->fetch_assoc();
+// }
 
 /**********************************************************************************
 Modifier les informations d'une commande selon son id
@@ -1233,7 +1306,7 @@ fonction pour rechercher sur la table commande
 function get_search_commande($search)
 {
     global $connexion;
-    $requete = "SELECT * FROM commande JOIN client ON client.id_client = commande.id_client WHERE id_commande LIKE '%$search%' OR nom_client LIKE '%$search%' OR prenom_client LIKE '%$search%' OR statut_commande LIKE '%$search%' OR adresse_client LIKE '%$search%' OR telephone_client LIKE '%$search%'";
+    $requete = "SELECT * FROM commande JOIN client ON client.id_client = commande.id_client WHERE id_commande LIKE '%$search%' OR nom_client LIKE '%$search%' OR prenom_client LIKE '%$search%' OR statut_commande LIKE '%$search%' OR adresse_client LIKE '%$search%' OR telephone_client LIKE '%$search%' ORDER BY commande.date_commande DESC";
     $resultat = $connexion->query($requete);
     if ($resultat->num_rows > 0) {
         return $resultat;
@@ -1408,11 +1481,69 @@ La liste de toutes les paiement de Commande
  **********************************************************************************/
 function get_all_paiement()
 {
-    global $connexion, $items_per_page, $offset;
-    $requete = "SELECT * FROM paiement JOIN commande ON commande.id_commande = paiement.id_commande";
+    global $connexion;
+    $requete = "SELECT * FROM paiement JOIN commande ON commande.id_commande = paiement.id_commande ORDER BY paiement.date_paiement DESC";
     $resultat = $connexion->query($requete);
     return $resultat;
 }
+
+function filtre_paiement($date_debut = null, $date_fin = null)
+{
+    global $connexion;
+
+    // Construction de la requête SQL de base
+    $requete = "SELECT * 
+                FROM paiement 
+                JOIN commande ON commande.id_commande = paiement.id_commande";
+
+    // Ajouter les conditions si les dates sont spécifiées
+    $conditions = [];
+    $params = [];
+    $types = ""; // Pour les types de données
+
+    if (!empty($date_debut)) {
+        $conditions[] = "paiement.date_paiement >= ?";
+        $params[] = $date_debut;
+        $types .= "s"; // Type "s" pour string (date)
+    }
+
+    if (!empty($date_fin)) {
+        $conditions[] = "paiement.date_paiement <= ?";
+        $params[] = $date_fin;
+        $types .= "s"; // Type "s" pour string (date)
+    }
+
+    // Ajouter les conditions à la requête
+    if (!empty($conditions)) {
+        $requete .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    $requete .= " ORDER BY paiement.date_paiement DESC";
+
+    // Préparer la requête
+    $stmt = $connexion->prepare($requete);
+
+    if (!$stmt) {
+        die("Erreur de préparation de la requête : " . $connexion->error);
+    }
+
+    // Lier les paramètres si nécessaire
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    // Exécuter la requête
+    $stmt->execute();
+
+    // Récupérer les résultats
+    $result = $stmt->get_result();
+
+    // Retourner les résultats sous forme de tableau associatif
+    return $result;
+}
+
+
+
 /***********************FIN (LES FONCTION DE LA TABLE LIGNE DE COMMANDE) ********************************* */
 
 

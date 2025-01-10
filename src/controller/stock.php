@@ -13,7 +13,7 @@ if (isset($_POST['quantite_disponible'])) {
         foreach ($_POST['produit_id'] as $produit_id) {
             if ($produit_id) {
                 $countSuccess++;
-                add_stock($produit_id, $_POST['quantite_disponible'], $_POST['emplacement_produit']);
+                add_stock($produit_id, $_POST['quantite_disponible'], $_POST['min'], $_POST['max'], $_POST['emplacement_produit']);
             }
         }
         if ($countSuccess != 0) {
@@ -36,7 +36,7 @@ if (isset($_GET['put_id_stock'])) {
 if (isset($_POST['put_quantite_disponible'])) {
     try {
         //($produit_id, $quantite_disponible, $emplacement_produit, $id_stock);
-        $result = update_stock($_POST['put_produit_id'], $_POST['put_quantite_disponible'], $_POST['put_emplacement_produit'], $_POST['put_id_stock']);
+        $result = update_stock($_POST['put_produit_id'], $_POST['put_quantite_disponible'], $_POST['min'], $_POST['max'], $_POST['put_emplacement_produit'], $_POST['put_id_stock']);
         if ($result == true) {
             return header('Location:../view/stock.php?update_success=PRODUIT MODIFIER AVEC SUCCESS');
         }

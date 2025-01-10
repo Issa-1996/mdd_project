@@ -3,7 +3,8 @@ if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
   session_destroy();
   header('Location:  /mmd/index.php');
   exit();
-}?>
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,25 +70,24 @@ if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
           href="#"
           class="nav-link dropdown-toggle"
           data-bs-toggle="dropdown">
-          <img
+          <!-- <img
             class="rounded-circle me-lg-2"
             src="../../assets/img/user.jpg"
             alt=""
-            style="width: 40px; height: 40px" />
+            style="width: 40px; height: 40px" /> -->
           <span class="d-none d-lg-inline-flex"><?= $_SESSION['prenom'] . " " . $_SESSION['nom'] ?></span>
         </a>
         <div
           class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-          <a href="#" class="dropdown-item">Mon Profil</a>
-          <a href="#" class="dropdown-item">Paramétre</a>
+          <a href="../controller/utilisateur.php?get_id_utilisateur=<?= $_SESSION['id_utilisateur'] ?>" class="dropdown-item">Mon Profil</a>
+          <!-- <a href="#" class="dropdown-item">Paramétre</a> -->
           <a href="../controller/deconnexion.php" class="dropdown-item">Déconnexion</a>
         </div>
       </div>
     </div>
   </nav>
-
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+  <script src="../../assets/js/bootstrap.bundle.min.js"></script>
   <script src="../../assets/lib/chart/chart.min.js"></script>
   <script src="../../assets/lib/easing/easing.min.js"></script>
   <script src="../../assets/lib/waypoints/waypoints.min.js"></script>

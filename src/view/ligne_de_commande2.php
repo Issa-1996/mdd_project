@@ -6,13 +6,20 @@ header("Pragma: no-cache");
 header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
 
 if (!isset($_SESSION['login']) && !isset($_SESSION['mot_de_passe'])) {
-  session_destroy();
-  header("Location: ../../index.php");
-  exit();
+    session_destroy();
+    header("Location: ../../index.php");
+    exit();
 }
 require_once('../controller/fonction.php');
-$id_commande = $_GET['id_commande'];
-$all_ligne_commande = get_all_ligne_commande_by_commande($id_commande);
+
+if (isset($_GET['put_id_commande'])) {
+    $id_commande = $_GET['put_id_commande'];
+    $all_ligne_commande = get_all_ligne_commande_by_commande($_GET['put_id_commande']);
+    // print_r($all_ligne_commande); die;
+} else {
+    $id_commande = $_GET['id_commande'];
+    $all_ligne_commande = get_all_ligne_commande_by_commande($id_commande);
+}   
 
 //Verification message success d'ajout
 if (isset($_GET['success'])) {
@@ -135,7 +142,7 @@ if (isset($_GET['error_add'])) {
                                                     <input class="form-control" style="width: 60%; margin: auto;" type="number" min="0" name="prix_reduction[]" value="<?= $one_ligne_commande['prix_reduction'] ?>" required>
                                                 </td>
                                                 <input type="text" name="one_commande" value="<?= $id_commande ?>" hidden>
-                                                <td style="text-align: center;"><input class="form-control" style="width: 38%; margin: auto;" type="number" min="1" name="quantite[]" value="<?= $one_ligne_commande['quantite'] ?>" required></td>
+                                                <td style="text-align: center;"><input class="form-control" style="width: 80%; margin: auto;" type="number" min="1" max="<?= $one_ligne_commande['quantite_disponible'] ?>" name="quantite[]" value="<?= $one_ligne_commande['quantite'] ?>" required></td>
                                                 <input type="text" name="quantite_disponible[]" value="<?= $one_ligne_commande['quantite_disponible'] ?>" hidden="true">
                                                 <input type="text" name="id_stock[]" value="<?= $one_ligne_commande['id_stock'] ?>" hidden="true">
                                                 <td><?= $one_ligne_commande['quantite_disponible'] ?></td>
@@ -149,13 +156,13 @@ if (isset($_GET['error_add'])) {
                                 <!-- DEBUT MODAL CONFIRMATION DE CONTINUER -->
                                 <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content bg-secondary">
                                             <div class="modal-header">
                                                 <span class="modal-title fs-5" id="exampleModalLabel">CONFIRMATION</span>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <span id="error-message" style="color: red;"></span>
-                                            <div class="modal-body bg-secondary">
+                                            <div class="modal-body">
                                                 VOUS ETES DE VOULOIR CONTINUER ?
                                             </div>
                                             <div class="modal-footer">
@@ -181,8 +188,8 @@ if (isset($_GET['error_add'])) {
         </div>
 
         <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../assets/js/jquery-3.4.1.min.js"></script>
+        <script src="../../assets/js/bootstrap.bundle.min.js"></script>
         <script src="../../assets/lib/chart/chart.min.js"></script>
         <script src="../../assets/lib/easing/easing.min.js"></script>
         <script src="../../assets/lib/waypoints/waypoints.min.js"></script>
